@@ -124,7 +124,7 @@
         }
 
         .hero p {
-            font-size: 1.1rem;
+           scr font-size: 1.1rem;
             margin-bottom: 2rem;
             color: #e0e0e0;
         }
@@ -335,28 +335,43 @@
                 align-items: center;
             }
 
-            nav ul {
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: linear-gradient(90deg, #1a1a1a 0%, #333333 100%);
-                padding: 1rem 0;
-                display: none;
-                text-align: center;
+            .hamburger {
+                display: flex;
+                z-index: 1100;
             }
 
-            nav ul.active {
-                display: flex;
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                width: 250px;
+                height: 100vh;
+                background: linear-gradient(90deg, #1a1a1a 0%, #333333 100%);
+                flex-direction: column;
+                padding: 4rem 1rem;
+                transition: left 0.3s ease;
+                z-index: 1000;
+                overflow-y: auto;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: flex-start;
             }
 
             nav li {
-                margin: 0.5rem 0;
+                width: 100%;
             }
 
-            .hamburger {
-                display: flex;
+            nav a {
+                display: block;
+                padding: 0.5rem 1rem;
+                font-size: 1.1rem;
             }
 
             .hero h2 {
@@ -430,6 +445,11 @@
 
             .section {
                 padding: 2rem 0.5rem;
+            }
+
+            .nav-menu {
+                width: 200px;
+                left: -200px;
             }
         }
     </style>
@@ -529,7 +549,7 @@
             <p>Soy Agustín Bergomi, un consultor tecnológico con más de 10 años de experiencia ayudando a empresas a navegar el panorama digital con confianza. Mi enfoque combina visión estratégica con un entendimiento profundo de las necesidades del negocio, permitiéndome ofrecer soluciones que no solo resuelven problemas, sino que impulsan el crecimiento sostenible.</p>
             <p>Mi trayectoria incluye colaboraciones con empresas de diversos sectores, desde startups hasta corporaciones, ayudándolas a implementar tecnologías que optimizan procesos y generan valor. Estoy especializado en transformar ideas en estrategias prácticas, con un enfoque en la simplicidad y la efectividad.</p>
             <p>Además de mi experiencia técnica, me apasiona trabajar de cerca con los equipos para fomentar una cultura de innovación. Creo firmemente que la tecnología debe estar al servicio de las personas, y mi misión es empoderar a las empresas para que alcancen su máximo potencial en un mundo cada vez más digital.</p>
-            <a href="https://www.linkedin.com/in/49751892474/" target="_blank">
+            <a href="https://www.linkedin.com/in/agustinbergomi/" target="_blank">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" class="linkedin-logo">
             </a>
         </div>
@@ -583,6 +603,8 @@
             const hamburger = document.querySelector('.hamburger');
             menu.classList.toggle('active');
             hamburger.classList.toggle('active');
+            // Toggle body scroll lock
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
         }
 
         // Smooth scroll for navigation and CTA button
