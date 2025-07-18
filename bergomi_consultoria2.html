@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultoría en Tecnología</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(90deg, #1a1a1a 0%, #333333 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #cccccc;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-menu {
+            display: flex;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(50,50,50,0.7)), url('https://images.unsplash.com/photo-1516321318423-ffd94a9d0f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 0 1rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ffffff, #d0d0d0);
+            color: #1a1a1a;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .section {
+            padding: 4rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .home h2, .services h2, .about h2, .faq h2, .contact h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background: linear-gradient(to right, #1a1a1a, #555555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .home p, .services p, .about p, .faq p, .contact p {
+            font-size: 1rem;
+            color: #444;
+            margin: 0 auto 1.5rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .service-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .service-card.express {
+            background: linear-gradient(45deg, #d4af37, #b8860b);
+            color: #1a1a1a;
+        }
+
+        .service-card.express h3 {
+            color: #1a1a1a;
+        }
+
+        .service-card.express p {
+            color: #333;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+        }
+
+        .service-card h3 {
+            color: #1a1a1a;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .service-card p {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .about-content, .faq-content, .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content p, .contact-content p {
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .linkedin-logo {
+            width: 36px;
+            height: 36px;
+            margin: 1rem auto 0;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .linkedin-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .faq-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item h3 {
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item p {
+            font-size: 1rem;
+            color: #444;
+        }
+
+        .contact-content a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-content a:hover {
+            color: #555;
+        }
+
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            background: linear-gradient(45deg, #25D366, #20b358);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 1000;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .whatsapp-btn img {
+            width: 40px;
+            height: 40px;
+        }
+
+        footer {
+            background: linear-gradient(90deg, #1a1a1a 0%, #333333 100%);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer a {
+            color: #cccccc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            color: #ffffff;
+        }
+
+        .footer-linkedin {
+            width: 36px;
+            height: 36px;
+            margin: 1rem auto 0;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-linkedin:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            nav ul {
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(90deg, #1a1a1a 0%, #333333 100%);
+                padding: 1rem 0;
+                display: none;
+                text-align: center;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav li {
+                margin: 0.5rem 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .home h2, .services h2, .about h2, .faq h2, .contact h2 {
+                font-size: 1.5rem;
+            }
+
+            .services-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .service-card {
+                padding: 1rem;
+                max-width: 100%;
+            }
+
+            .service-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .service-card p {
+                font-size: 0.85rem;
+            }
+
+            .whatsapp-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .whatsapp-btn img {
+                width: 24px;
+                height: 24px;
+            }
+
+            .linkedin-logo, .footer-linkedin {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 0.8rem;
+            }
+
+            .cta-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .section {
+                padding: 2rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Consultoría en Tecnología</h1>
+            <nav>
+                <div class="hamburger" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Inicio</a></li>
+                    <li><a href="#services">Servicios</a></li>
+                    <li><a href="#about">Sobre Mí</a></li>
+                    <li><a href="#faq">Preguntas Frecuentes</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Soluciones Tecnológicas para tu Negocio</h2>
+            <p>Impulsamos tu éxito con estrategias digitales personalizadas y un enfoque centrado en tus necesidades.</p>
+            <a href="#services" class="cta-button">Conoce Nuestros Servicios</a>
+        </div>
+    </section>
+
+    <section id="home" class="section home">
+        <h2>Bienvenidos</h2>
+        <p>Soy Agustín Bergomi, consultor tecnológico con más de 10 años de experiencia. Ofrezco soluciones estratégicas para optimizar tus procesos y llevar tu negocio al siguiente nivel en un entorno digital.</p>
+        <p>Explora mis servicios y descubre cómo puedo ayudarte a alcanzar tus objetivos empresariales con un enfoque práctico y orientado a resultados.</p>
+    </section>
+
+    <section id="services" class="section services">
+        <h2>Servicios</h2>
+        <div class="services-grid">
+            <div class="service-card express" data-service="Consulta Express">
+                <h3>Consulta Express</h3>
+                <p>Ofrecemos una consulta rápida y profesional para resolver dudas puntuales o evaluar necesidades específicas, proporcionando soluciones prácticas en tiempo récord.</p>
+            </div>
+            <div class="service-card" data-service="Consultoría Estratégica">
+                <h3>Consultoría Estratégica</h3>
+                <p>¿No sabes por dónde empezar? Te ofrecemos una consultoría integral para evaluar tus necesidades y diseñar un plan estratégico personalizado que impulse tu transformación digital.</p>
+            </div>
+            <div class="service-card" data-service="Transformación Digital Estratégica">
+                <h3>Transformación Digital Estratégica</h3>
+                <p>Desarrollamos planes integrales para digitalizar tus operaciones, enfocándonos en la eficiencia, la experiencia del cliente y el crecimiento sostenible.</p>
+            </div>
+            <div class="service-card" data-service="Creación de FODA">
+                <h3>Creación de FODA</h3>
+                <p>Elaboramos análisis FODA personalizados para identificar fortalezas, debilidades, oportunidades y amenazas, proporcionando una base sólida para la toma de decisiones estratégicas.</p>
+            </div>
+            <div class="service-card" data-service="Gestión de Proyectos Tecnológicos">
+                <h3>Gestión de Proyectos Tecnológicos</h3>
+                <p>Supervisamos proyectos tecnológicos desde la planificación hasta la ejecución, garantizando resultados alineados con tus metas de negocio.</p>
+            </div>
+            <div class="service-card" data-service="Consultoría en Cloud">
+                <h3>Consultoría en Cloud</h3>
+                <p>Asesoramos en la adopción de soluciones en la nube, optimizando costos y mejorando la escalabilidad y accesibilidad de tus operaciones.</p>
+            </div>
+            <div class="service-card" data-service="Capacitación Tecnológica">
+                <h3>Capacitación Tecnológica</h3>
+                <p>Ofrecemos talleres y programas de formación personalizados para que tu equipo adopte nuevas tecnologías con confianza y eficacia.</p>
+            </div>
+            <div class="service-card" data-service="Quality Assurance">
+                <h3>Quality Assurance</h3>
+                <p>Implementamos procesos de aseguramiento de calidad para garantizar que tus productos y servicios tecnológicos cumplan con los más altos estándares.</p>
+            </div>
+            <div class="service-card" data-service="Quality Control">
+                <h3>Quality Control</h3>
+                <p>Realizamos controles rigurosos para identificar y corregir defectos, asegurando la entrega de soluciones tecnológicas confiables y de alta calidad.</p>
+            </div>
+            <div class="service-card" data-service="UX/UI Assessment">
+                <h3>UX/UI Assessment</h3>
+                <p>Evaluamos la experiencia y la interfaz de usuario de tus productos digitales para optimizar la usabilidad y la satisfacción del cliente.</p>
+            </div>
+            <div class="service-card" data-service="Assessment de Usabilidad">
+                <h3>Assessment de Usabilidad</h3>
+                <p>Analizamos la usabilidad de tus plataformas digitales para garantizar una experiencia intuitiva y eficiente para tus usuarios.</p>
+            </div>
+            <div class="service-card" data-service="Assessment de Accesibilidad">
+                <h3>Assessment de Accesibilidad</h3>
+                <p>Evaluamos y mejoramos la accesibilidad de tus soluciones digitales para cumplir con estándares inclusivos y llegar a todos los usuarios.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section about">
+        <h2>Sobre Mí</h2>
+        <div class="about-content">
+            <p>Soy Agustín Bergomi, un consultor tecnológico con más de 10 años de experiencia ayudando a empresas a navegar el panorama digital con confianza. Mi enfoque combina visión estratégica con un entendimiento profundo de las necesidades del negocio, permitiéndome ofrecer soluciones que no solo resuelven problemas, sino que impulsan el crecimiento sostenible.</p>
+            <p>Mi trayectoria incluye colaboraciones con empresas de diversos sectores, desde startups hasta corporaciones, ayudándolas a implementar tecnologías que optimizan procesos y generan valor. Estoy especializado en transformar ideas en estrategias prácticas, con un enfoque en la simplicidad y la efectividad.</p>
+            <p>Además de mi experiencia técnica, me apasiona trabajar de cerca con los equipos para fomentar una cultura de innovación. Creo firmemente que la tecnología debe estar al servicio de las personas, y mi misión es empoderar a las empresas para que alcancen su máximo potencial en un mundo cada vez más digital.</p>
+            <a href="https://www.linkedin.com/in/49751892474/" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" class="linkedin-logo">
+            </a>
+        </div>
+    </section>
+
+    <section id="faq" class="section faq">
+        <h2>Preguntas Frecuentes</h2>
+        <div class="faq-content">
+            <div class="faq-item">
+                <h3>¿Qué tipo de empresas pueden beneficiarse de tus servicios?</h3>
+                <p>Trabajo con empresas de todos los tamaños y sectores, desde startups hasta grandes corporaciones, que buscan optimizar sus procesos o adoptar tecnologías estratégicas.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Cómo funciona el análisis FODA?</h3>
+                <p>El análisis FODA implica una evaluación detallada de tu negocio para identificar fortalezas, debilidades, oportunidades y amenazas, lo que permite diseñar estrategias efectivas.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Ofreces servicios personalizados?</h3>
+                <p>Sí, todos mis servicios son adaptados a las necesidades específicas de cada cliente, asegurando soluciones que se alineen con sus objetivos.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Cuánto tiempo lleva implementar una estrategia de transformación digital?</h3>
+                <p>El tiempo varía según la complejidad del proyecto, pero trabajamos von vos para establecer plazos realistas y entregas puntuales.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section contact">
+        <h2>Contacto</h2>
+        <div class="contact-content">
+            <p>¿Listo para llevar tu negocio al siguiente nivel? Contáctame para discutir tus necesidades y cómo puedo ayudarte.</p>
+            <p><strong>Teléfono:</strong> <a href="tel:+541128259919">+54 11 2825 9919</a></p>
+            <p><strong>Email:</strong> <a href="mailto:agustin.bergomi@gmail.com">agustin.bergomi@gmail.com</a></p>
+            <p><strong>WhatsApp:</strong> <a href="https://wa.me/541128259919">Chatea conmigo</a></p>
+        </div>
+    </section>
+
+    <a href="https://wa.me/541128259919" class="whatsapp-btn" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    </a>
+
+    <footer>
+        <p>© 2025 Consultoría en Tecnología. Todos los derechos reservados.</p>
+        <p><strong>Teléfono:</strong> <a href="tel:+541128259919">+54 11 2825 9919</a> | <strong>Email:</strong> <a href="mailto:agustin.bergomi@gmail.com">agustin.bergomi@gmail.com</a></p>
+    </footer>
+
+    <script>
+        // Hamburger menu toggle
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-menu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        // Smooth scroll for navigation and CTA button
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                window.scrollTo({
+                    top: targetElement.offsetTop - 60,
+                    behavior: 'smooth'
+                });
+                // Close menu on mobile after clicking
+                if (window.innerWidth <= 768) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // WhatsApp link for service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const serviceName = this.getAttribute('data-service');
+                const message = encodeURIComponent(`Hola, me interesa el servicio de ${serviceName}`);
+                window.open(`https://wa.me/541128259919?text=${message}`, '_blank');
+            });
+        });
+
+        // Fade-in animation for sections
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
