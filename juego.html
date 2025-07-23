@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juego de Pelea</title>
+  <title>Juego de Pelea Simple</title>
   <style>
     canvas { border: 2px solid black; display: block; margin: 0 auto; }
     body { display: flex; flex-direction: column; align-items: center; background: #f0f0f0; }
@@ -12,8 +12,111 @@
 </head>
 <body>
   <canvas id="gameCanvas" width="800" height="400"></canvas>
-  <div id="status">Esperando otro jugador...</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
-  <script src="game.js"></script>
+  <div id="status">¡Pelea en curso! Jugador 1: A, D, W, Espacio | Jugador 2: Flechas, Enter</div>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const status = document.getElementById('status');
+
+    const players = {
+      p1: { x: 100, y: 350, health: 100, attacking: false, vx: 0, vy: 0 },
+      p2: { x: 650, y: 350, health: 100, attacking: false, vx: 0, vy: 0 }
+    };
+
+    const keys = {
+      KeyA: false, KeyD: false, KeyW: false, Space: false,
+      ArrowLeft: false, ArrowRight: false, ArrowUp: false, Enter: false
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code in keys) {
+        keys[e.code] = true;
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.code in keys) {
+        keys[e.code] = false;
+        e.preventDefault();
+      }
+    });
+
+    function update() {
+      // Jugador 1
+      if (keys.KeyA && players.p1.x > 0) players.p1.vx = -5;
+      else if (keys.KeyD && players.p1.x < canvas.width - 50) players.p1.vx = 5;
+      else players.p1.vx = 0;
+      if (keys.KeyW && players.p1.y === canvas.height - 50) players.p1.vy = -10;
+      if (keys.Space) players.p1.attacking = true;
+
+      // Jugador 2
+      if (keys.ArrowLeft && players.p2.x > 0) players.p2.vx = -5;
+      else if (keys.ArrowRight && players.p2.x < canvas.width - 50) players.p2.vx = 5;
+      else players.p2.vx = 0;
+      if (keys.ArrowUp && players.p2.y === canvas.height - 50) players.p2.vy = -10;
+      if (keys.Enter) players.p2.attacking = true;
+
+      // Aplicar movimiento y gravedad
+      ['p1', 'p2'].forEach(id => {
+        const p = players[id];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.y < canvas.height - 50) p.vy += 0.5; // Gravedad
+        if (p.y > canvas.height - 50) { p.y = canvas.height - 50; p.vy = 0; }
+      });
+
+      // Ataques
+      if (players.p1.attacking && Math.abs(players.p1.x - players.p2.x) < 70 && Math.abs(players.p1.y - players.p2.y) < 50) {
+        players.p2.health -= 10;
+      }
+      if (players.p2.attacking && Math.abs(players.p1.x - players.p2.x) < 70 && Math.abs(players.p1.y - players.p2.y) < 50) {
+        players.p1.health -= 10;
+      }
+
+      // Verificar fin del juego
+      if (players.p1.health <= 0 || players.p2.health <= 0) {
+        status.textContent = players.p1.health <= 0 ? '¡Jugador 2 (Rojo) gana!' : '¡Jugador 1 (Azul) gana!';
+        players.p1 = { x: 100, y: 350, health: 100, attacking: false, vx: 0, vy: 0 };
+        players.p2 = { x: 650, y: 350, health: 100, attacking: false, vx: 0, vy: 0 };
+      }
+
+      // Resetear ataque
+      players.p1.attacking = false;
+      players.p2.attacking = false;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Dibujar Jugador 1 (Azul)
+      ctx.fillStyle = 'blue';
+      ctx.fillRect(players.p1.x, players.p1.y, 50, 50);
+      ctx.fillStyle = 'green';
+      ctx.fillRect(players.p1.x, players.p1.y - 10, players.p1.health * 0.5, 5);
+      if (players.p1.attacking) {
+        ctx.fillStyle = 'orange';
+        ctx.fillRect(players.p1.x + 50, players.p1.y, 20, 20);
+      }
+
+      // Dibujar Jugador 2 (Rojo)
+      ctx.fillStyle = 'red';
+      ctx.fillRect(players.p2.x, players.p2.y, 50, 50);
+      ctx.fillStyle = 'green';
+      ctx.fillRect(players.p2.x, players.p2.y - 10, players.p2.health * 0.5, 5);
+      if (players.p2.attacking) {
+        ctx.fillStyle = 'orange';
+        ctx.fillRect(players.p2.x - 20, players.p2.y, 20, 20);
+      }
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
 </body>
 </html>
