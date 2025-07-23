@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego simple</title>
+  <style>
+    #player {
+      width: 100px;
+      height: 100px;
+      margin: 100px auto;
+      cursor: pointer;
+    }
+    #msg {
+      text-align: center;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <div id="msg">Esperando al oponente...</div>
+
+  <script>
+    const ws = new WebSocket('ws://' + location.hostname + ':3000');
+    let playerColor;
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.error) {
+        document.getElementById("msg").innerText = data.error;
+        return;
+      }
+
+      if (data.type === 'init') {
+        playerColor = data.color;
+        const player = document.getElementById('player');
+        player.style.background = playerColor;
+        player.onclick = () => {
+          ws.send(JSON.stringify({ type: 'attack' }));
+        };
+        document.getElementById("msg").innerText = "Hacé clic para atacar";
+      }
+
+      if (data.type === 'attacked') {
+        document.getElementById("msg").innerText = "¡Te atacaron!";
+      }
+
+      if (data.type === 'result') {
+        if (data.win) {
+          document.getElementById("msg").innerText = "¡Ganaste!";
+        } else {
+          document.getElementById("msg").innerText = "Perdiste...";
+        }
+        document.getElementById('player').onclick = null;
+      }
+    };
+  </script>
+</body>
+</html>
