@@ -2,58 +2,51 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Juego simple</title>
+  <title>Juego PHP TXT</title>
   <style>
-    #player {
-      width: 100px;
-      height: 100px;
-      margin: 100px auto;
-      cursor: pointer;
+    #jugador {
+      width: 100px; height: 100px; margin: 100px auto;
     }
-    #msg {
-      text-align: center;
-      font-size: 24px;
-    }
+    #msg { text-align: center; font-size: 20px; }
+    #boton { display: block; margin: 20px auto; }
   </style>
 </head>
 <body>
-  <div id="player"></div>
-  <div id="msg">Esperando al oponente...</div>
+  <div id="jugador"></div>
+  <div id="msg">Cargando...</div>
+  <button id="boton">Atacar</button>
 
   <script>
-    const ws = new WebSocket('ws://' + location.hostname + ':3000');
-    let playerColor;
+    const jugador = document.getElementById("jugador");
+    const msg = document.getElementById("msg");
+    const boton = document.getElementById("boton");
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.error) {
-        document.getElementById("msg").innerText = data.error;
-        return;
-      }
+    function cargarEstado() {
+      fetch("game.php")
+        .then(res => res.json())
+        .then(data => {
+          jugador.style.background = data.yo.color;
+          msg.innerText = "Tu vida: " + data.yo.health +
+                          (data.enemigo ? " | Enemigo: " + data.enemigo.health : " | Esperando otro jugador...");
+          if (data.yo.health <= 0) {
+            msg.innerText = "Perdiste";
+            boton.disabled = true;
+          } else if (data.enemigo && data.enemigo.health <= 0) {
+            msg.innerText = "¡Ganaste!";
+            boton.disabled = true;
+          }
+        });
+    }
 
-      if (data.type === 'init') {
-        playerColor = data.color;
-        const player = document.getElementById('player');
-        player.style.background = playerColor;
-        player.onclick = () => {
-          ws.send(JSON.stringify({ type: 'attack' }));
-        };
-        document.getElementById("msg").innerText = "Hacé clic para atacar";
-      }
-
-      if (data.type === 'attacked') {
-        document.getElementById("msg").innerText = "¡Te atacaron!";
-      }
-
-      if (data.type === 'result') {
-        if (data.win) {
-          document.getElementById("msg").innerText = "¡Ganaste!";
-        } else {
-          document.getElementById("msg").innerText = "Perdiste...";
-        }
-        document.getElementById('player').onclick = null;
-      }
+    boton.onclick = () => {
+      fetch("game.php", { method: "POST" }).then(() => {
+        setTimeout(cargarEstado, 300); // esperar un toque y recargar
+      });
     };
+
+    // Actualizar cada 2 segundos
+    setInterval(cargarEstado, 2000);
+    cargarEstado();
   </script>
 </body>
 </html>
